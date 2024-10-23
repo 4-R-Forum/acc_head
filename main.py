@@ -1,11 +1,14 @@
 def getAVH():
     return 0
+def turnStart():
+    MotorDriver.motor_run(Motor.A, Dir.FORWARD, 8)
+    MotorDriver.motor_run(Motor.B, Dir.BACKWARD, 8)
 def turnStop():
-    pass
+    MotorDriver.motor_stop(Motor.B)
+    MotorDriver.motor_stop(Motor.B)
 def getDeltaH():
     return 0
-def turnStart():
-    pass
+
 def getCompH():
     return 0
 def getAV():
