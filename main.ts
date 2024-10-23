@@ -1,40 +1,38 @@
-function getAVH(): number {
+function getAVH () {
     return 0
 }
-
-function turnStop() {
-    
+function turnStop () {
+    MotorDriver.MotorStop(Motor.B)
+    MotorDriver.MotorStop(Motor.B)
 }
-
-function getDeltaH(): number {
+function getDeltaH () {
     return 0
 }
-
-function turnStart() {
-    
+function turnStart () {
+    MotorDriver.MotorRun(Motor.A, Dir.forward, 8)
+    MotorDriver.MotorRun(Motor.B, Dir.backward, 8)
 }
-
-function getCompH(): number {
+function getCompH () {
     return 0
 }
-
-function getAV(): number {
+function getAV () {
     return 0
 }
-
 let el = 0
 input.calibrateCompass()
 let ch = input.compassHeading()
-basic.forever(function on_forever() {
-    
+basic.forever(function () {
     if (input.logoIsPressed()) {
         game.gameOver()
     }
-    
     turnStart()
     getAV()
     getAVH()
     getDeltaH()
     el = input.compassHeading()
-    datalogger.log(datalogger.createCV("", 0), datalogger.createCV("", 0), datalogger.createCV("", 0))
+    datalogger.log(
+    datalogger.createCV("", 0),
+    datalogger.createCV("", 0),
+    datalogger.createCV("", 0)
+    )
 })
