@@ -1,9 +1,6 @@
 # Imports go at the top
 from microbit import *
-import sys
-
-#from SBCMotorDriver2 import *
-
+from main import Motor, Dir
 #"""
 class Motor:
     A = 0x1
@@ -121,47 +118,4 @@ class MotorDriver:
         else:
             #pins.servoSetPulse(S2_PIN, temp)
             MotorDriver.servo_write(Servo.S2 , temp)
-
-
-
-
-def getAVH():
-    return 0
-def turnStart():
-    MotorDriver.MotorRun(Motor.A, Dir.forward, 8)
-    MotorDriver.MotorRun(Motor.B, Dir.backward, 8)
-def turnStop():
-    MotorDriver.MotorStop(Motor.B)
-    MotorDriver.MotorStop(Motor.B)
-def getDeltaH():
-    return 0
-
-def getCompH():
-    return 0
-def getAV():
-    return 0
-    
-el = 0
-display.show(Image.HEART)
-
-compass.calibrate()
-ch = compass.heading()
-
-def on_forever():
-    if pin_logo.is_touched():
-        display.show(Image.HAPPY)
-        sys.exit()
-    global el
-    turnStart()
-    getAV()
-    getAVH()
-    getDeltaH()
-    el = compass.heading()
-    """
-    datalogger.log(datalogger.create_cv("", 0),
-        datalogger.create_cv("", 0),
-        datalogger.create_cv("", 0))
-    """
-while True:
-    on_forever()
 
