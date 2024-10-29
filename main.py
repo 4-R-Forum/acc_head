@@ -1,10 +1,11 @@
 # Imports go at the top
 from microbit import *
 import sys
+import math
+import time
+import log # type: ignore
 
-#from SBCMotorDriver2 import *
-
-#"""
+# +++ SBC MotorDriver +++
 class Motor:
     A = 0x1
     B = 0x2
@@ -12,12 +13,11 @@ class Motor:
 class Dir:
     forward = 0x1
     backward = 0x2
-#"""    
+
 class Servo:
     S0 = 0x1
     S1 = 0x2
     S2 = 0x3
-
 
 PWMA = pin8
 AIN1 = pin13
@@ -122,8 +122,25 @@ class MotorDriver:
             #pins.servoSetPulse(S2_PIN, temp)
             MotorDriver.servo_write(Servo.S2 , temp)
 
+# --- SBC MotorDriver ---
 
+# +++ mPy-POC-2 +++
+prev_angle = 0
+prev_time = 0
+prev_head = 0
 
+def get_angle():
+    x = accelerometer.get_x()
+    y = accelerometer.get_y()
+    angle = math.atan2(y, x) * 180 / math.pi
+    return angle
+
+def get_angular_velocity():
+    current_angle = get_angle()
+    current_time = time.ticks_ms()
+    delta_angle = current_angle - prev_angle
+    delta_time = (current_time - prev_time) / 1000  # Convert ms to seconds
+    return delta_angle / delta_time
 
 def getAVH():
     return 0
@@ -146,22 +163,23 @@ display.show(Image.HEART)
 
 compass.calibrate()
 ch = compass.heading()
+log.set_mirroring(True)
+
 
 def on_forever():
     if pin_logo.is_touched():
         display.show(Image.HAPPY)
         sys.exit()
-    global el
+        
     turnStart()
-    getAV()
-    getAVH()
-    getDeltaH()
-    el = compass.heading()
-    """
-    datalogger.log(datalogger.create_cv("", 0),
-        datalogger.create_cv("", 0),
-        datalogger.create_cv("", 0))
-    """
+    av = get_angular_velocity()
+    ch = compass.heading()
+    turnStop()
+    
+    log.set_labels('av', 'ch', timestamp=log.MILLISECONDS)
+    log.add({'av':av, 'ch':ch})
+# +++ mPy-POC-2 +++
+
 while True:
     on_forever()
 
